@@ -6,6 +6,8 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -14,8 +16,13 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
+  @Get()
+  getCustomers() {
+    return this.customersService.getCustomers();
+  }
+
   @Get(':id')
-  getCustomer(@Param('id', ParseIntPipe) id: number) {
+  getCustomer(@Param('id') id: number) {
     const customer = this.customersService.getCustomer(id);
 
     if (!customer) {
@@ -26,6 +33,7 @@ export class CustomersController {
   }
 
   @Post()
+  @UsePipes(ValidationPipe)
   createCustomer(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.createCustomer(createCustomerDto);
   }
