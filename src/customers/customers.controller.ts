@@ -3,9 +3,8 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -16,16 +15,15 @@ export class CustomersController {
 
   @Get()
   getCustomers() {
-    return this.customersService.getCustomers();
+    return this.customersService.getCustomers();CreateCustomerDto
   }
 
   @Get(':id')
-  getCustomer(@Param('id') id: number) {
+  getCustomer(@Param('id', ParseIntPipe) id: number) {
     return this.customersService.getCustomer(id);
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
   createCustomer(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.createCustomer(createCustomerDto);
   }
