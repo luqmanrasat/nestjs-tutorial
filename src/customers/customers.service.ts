@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { Customer } from './types/customer';
 
@@ -27,7 +27,13 @@ export class CustomersService {
   }
 
   getCustomer(id: number) {
-    return this.customers.find((user) => user.id === id);
+    const customer = this.customers.find((customer) => customer.id === id);
+
+    if (!customer) {
+      throw new NotFoundException(`Customer #${id} not found!`);
+    }
+
+    return customer;
   }
 
   createCustomer(createCustomerDto: CreateCustomerDto) {

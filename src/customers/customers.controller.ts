@@ -2,9 +2,7 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   UsePipes,
   ValidationPipe,
@@ -23,13 +21,7 @@ export class CustomersController {
 
   @Get(':id')
   getCustomer(@Param('id') id: number) {
-    const customer = this.customersService.getCustomer(id);
-
-    if (!customer) {
-      throw new NotFoundException(`Customer #${id} not found!`);
-    }
-
-    return customer;
+    return this.customersService.getCustomer(id);
   }
 
   @Post()
