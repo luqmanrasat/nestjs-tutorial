@@ -3,21 +3,21 @@ import {
   Controller,
   Get,
   Post,
-  Request,
+  Req,
   Session,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 import { SerializedUser } from 'src/users/types/user';
-import { LocalAuthGuard } from './utils/local-guard';
+import { AuthenticatedGuard, LocalAuthGuard } from './utils/local-guard';
 
 @Controller('auth')
 export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async login(@Request() req) {
+  async login(@Req() req) {
     console.log('inside auth controller');
     return new SerializedUser(req.user);
   }
@@ -27,5 +27,12 @@ export class AuthController {
     console.log('inside auth controller');
     session.authenticated = true;
     return session;
+  }
+
+  @Get('status')
+  @UseGuards(AuthenticatedGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  getAuthStatus(@Req() req: Request) {
+    return new SerializedUser(req.user);
   }
 }

@@ -7,8 +7,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthenticatedGuard } from 'src/auth/utils/local-guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SerializedUser } from './types/user';
 import { UsersService } from './users.service';
@@ -19,6 +21,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(AuthenticatedGuard)
   async getUsers() {
     const users = await this.usersService.getUsers();
     return users.map((user) => new SerializedUser(user));

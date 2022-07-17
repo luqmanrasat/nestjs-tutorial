@@ -15,7 +15,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Please check your login credentials');
     }
-    
+
     return user;
   }
 }
