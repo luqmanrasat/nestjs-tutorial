@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -19,8 +20,14 @@ export class CustomersController {
   }
 
   @Get(':id')
-  getCustomer(@Param('id', ParseIntPipe) id: number) {
-    return this.customersService.getCustomer(id);
+  async getCustomer(@Param('id', ParseIntPipe) id: number) {
+    const customer = await this.customersService.getCustomer(id);
+
+    if (!customer) {
+      throw new NotFoundException(`Customer #${id} not found!`);
+    }
+
+    return customer;
   }
 
   @Post()

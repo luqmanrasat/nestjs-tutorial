@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
-import { User } from 'src/users/entities/user';
-import { Repository } from 'typeorm';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly usersService: UsersService,
   ){}
 
   async validateUser(username: string, password: string) {
     console.log('inside auth service');
-    const user = await this.userRepository.findOneBy({username})
+    const user = await this.usersService.getUserByUsername(username);
     if (!user || !(await compare(password, user.password))) {
       return null;
     }
